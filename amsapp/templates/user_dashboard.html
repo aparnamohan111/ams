@@ -1,0 +1,35 @@
+
+{% extends 'base_user.html' %}
+{% block title %}User Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-5">Welcome</h2>
+       
+            
+    <div class="container mt-6" style = "padding-top:150px ;">
+      <div class="row justify-content-center">
+    
+        <div class="col-md-4">
+          <div class="card text-center" style="width: 18rem;" role="button" onclick="window.location.href='/my_bookings'">
+            <div class="card-body">
+              <h3 class="card-title">AVAILABLE SLOT</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card text-center" style="width: 18rem;" role="button" onclick="window.location.href='/available_slots'">
+            <div class="card-body">
+              <h3 class="card-title">MY BOOKINGS</h3>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+      
+
+{% endblock %}
+
+

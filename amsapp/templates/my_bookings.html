@@ -1,0 +1,78 @@
+{% extends 'base_user.html' %}
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Bookings</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for booking in bookings %}
+      <tr id="booking-row-{{ booking.id }}">
+        <td>{{ booking.slot.date }}</td>
+        <td>{{ booking.slot.time }}</td>
+        <td>{{ booking.slot.description }}</td>
+        <td id="booking-status-{{ booking.id }}">
+          {% if booking.status == 'booked' %}
+            <span class="badge bg-success">Booked</span>
+          {% elif booking.status == 'canceled' %}
+            <span class="badge bg-danger">Canceled</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if booking.status == 'booked' %}
+            <button class="btn btn-sm btn-danger cancel-btn" data-booking-id="{{ booking.id }}">Cancel</button>
+          {% else %}
+            <span class="text-muted">No actions available</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5" class="text-center">No bookings found</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  
+  document.querySelectorAll('.cancel-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const bookingId = this.dataset.bookingId;
+
+      fetch(`/cancel-booking/${bookingId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === 'success'){
+          
+          document.getElementById(`booking-status-${bookingId}`).innerHTML =
+            '<span class="badge bg-danger">Canceled</span>';
+        
+          this.parentElement.innerHTML = '<span class="text-muted">No actions available</span>';
+        } else {
+          alert(data.message);
+        }
+      });
+    });
+  });
+
+});
+</script>
+
+{% endblock %}

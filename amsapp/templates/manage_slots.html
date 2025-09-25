@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Manage Slots{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Manage Slots</h2>
+
+<!-- Add Slot Form -->
+<div class="card mb-4">
+  <div class="card-header">Create a New Slot</div>
+  <div class="card-body">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-4">
+          <label class="form-label">Date</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Time</label>
+          <input type="time" name="time" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Description</label>
+          <input type="text" name="description" class="form-control" placeholder="Consultation" required>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Add Slot</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Description</th>
+      <th>Status</th>
+  
+    </tr>
+  </thead>
+  <tbody>
+    {% for slot in slots %}
+    <tr>
+      <td>{{ slot.date }}</td>
+      <td>{{ slot.time }}</td>
+      <td>{{ slot.description }}</td>
+      <td>
+        {% if slot.is_booked %}
+          <span class="badge bg-danger ">Booked</span>
+        {% else %}
+          <span class="badge bg-success">Available</span>
+        {% endif %}
+      </td>
+      
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5" class="text-center">No slots created yet</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
